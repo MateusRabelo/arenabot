@@ -1,7 +1,7 @@
 [project]
 name = "arenabot"
 version = "0.1.0"
-description = "Add your description here"
+description = "trbalho secreto de IA pra dominação mundial utilizando roobores do arenabot"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
