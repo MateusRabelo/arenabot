@@ -12,6 +12,10 @@ venv/
 PP01/
 PP01.zip
 
+# Documentation and markdown files
+docs/
+*.md
+
 # IDE configurations
 .idea/
 .vscode/
