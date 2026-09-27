@@ -46,8 +46,8 @@ class Position:
     
 
 class MineralType(Enum):
-    DDIAMOND = 100
-    RUBy = 80
+    DIAMOND = 100
+    RUBY = 80
     GOLD = 50
     SILVER = 30
     COPPER = 10
