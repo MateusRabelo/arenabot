@@ -21,8 +21,13 @@ MAX_CARGO_CAPACITY = 3
 DELIVERY_BONUS_PER_ITEM = 10
 BATTERY_SECURITY_THRESHOLD = 10
 
-ALFA_BASE = (0, 0)
-BETA_BASE = (ARENA_WIDTH -1, ARENA_HEIGHT -1)
+#celula da base e as duas vizinhas: nunca recebem parede, armadilha ou minerio
+ALFA_BASE = [(0, 0), (1, 0), (0, 1)]
+BETA_BASE = [
+    (ARENA_WIDTH - 2, ARENA_HEIGHT - 1),
+    (ARENA_WIDTH - 1, ARENA_HEIGHT - 1),
+    (ARENA_WIDTH - 1, ARENA_HEIGHT - 2),
+]
 
 
 
@@ -46,8 +51,8 @@ class Position:
     
 
 class MineralType(Enum):
-    DDIAMOND = 100
-    RUBy = 80
+    DIAMOND = 100
+    RUBY = 80
     GOLD = 50
     SILVER = 30
     COPPER = 10
