@@ -1,4 +1,10 @@
+import sys
+import pathlib
 from collections import namedtuple
+
+_src_dir = str(pathlib.Path(__file__).resolve().parent.parent)
+if _src_dir not in sys.path:
+    sys.path.insert(0, _src_dir)
 
 from core.domain import (
     BATTERY_SECURITY_THRESHOLD,

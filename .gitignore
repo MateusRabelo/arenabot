@@ -26,3 +26,9 @@ docs/
 dist/
 build/
 *.egg-info/
+
+# Tkinter visualizer and test tools
+tkinter_gui.py
+*tkinter*
+*gui*
+gui.py
