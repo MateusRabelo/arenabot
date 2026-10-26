@@ -24,10 +24,15 @@ def regra(nome, premissas, conclusao):
 
 
 BASE_REGRAS = [
+    # obrigatória: B_alta ∧ ¬C_cheia ⟹ P_coleta  (¬C_cheia vira nao_C_cheia)
     regra("R1", {"B_alta", "nao_C_cheia"}, "P_coleta"),
+    # obrigatória: C_cheia ⟹ P_descarga
     regra("R2", {"C_cheia"}, "P_descarga"),
+    # bateria não cobre o retorno ⟹ retorno obrigatório
     regra("R3", {"B_insuf_retorno"}, "P_descarga"),
+    # armadilha adjacente ∧ bateria baixa ⟹ rota alternativa
     regra("R4", {"A_adj", "B_baixa"}, "P_rota_alternativa"),
+    # encadeada: usa P_descarga (derivado por R2/R3) como premissa
     regra("R5", {"P_descarga", "A_adj"}, "P_rota_alternativa"),
 ]
 
@@ -122,3 +127,7 @@ def _demonstrar():
         print(f"  Regras disparadas: {[n for n, _ in rastro] or 'nenhuma'}")
         print(f"  Fatos derivados  : {sorted(derivados) or 'nenhum'}")
         print(f"  Coleta autorizada: {coleta_autorizada(fatos)}\n")
+
+
+if __name__ == "__main__":
+    _demonstrar()
