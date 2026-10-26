@@ -60,10 +60,6 @@ def run_benchmarks():
 
 def main():
     parser = argparse.ArgumentParser(description="Arena Bot — Sistema Competitivo de Coleta (PP01)")
-    parser.add_argument("--seed", type=int, default=None, help="Semente do gerador de mapa (aleatória se omitida)")
-    parser.add_argument("--delay", type=float, default=0.06, help="Tempo em segundos entre cada turno (padrão: 0.06; use 0 para instantâneo)")
-    parser.add_argument("--max-turns", type=int, default=600, help="Limite máximo de turnos da partida (padrão: 600)")
-    parser.add_argument("--no-clear", action="store_true", help="Não limpar o terminal entre turnos")
     parser.add_argument("--tournament", action="store_true", help="Executa o torneio oficial de 30 partidas (sementes 1 a 30)")
     parser.add_argument("--benchmark", action="store_true", help="Executa os benchmarks de navegação (A* vs BFS) e poda alfa-beta")
 
@@ -74,13 +70,7 @@ def main():
     elif args.benchmark:
         run_benchmarks()
     else:
-        chosen_seed = random.randint(1, 999999) if args.seed is None else args.seed
-        run_interactive_match(
-            seed=chosen_seed,
-            delay=args.delay,
-            max_turns=args.max_turns,
-            clear=not args.no_clear,
-        )
+        run_interactive_match(seed=random.randint(1, 999999))
 
 
 if __name__ == "__main__":
