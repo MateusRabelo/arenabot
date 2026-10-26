@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import random
 import argparse
 import pathlib
 
@@ -19,6 +20,7 @@ def run_interactive_match(seed: int = 1, delay: float = 0.08, max_turns: int = 6
     if clear and sys.stdout.isatty():
         sys.stdout.write("\033[H\033[J")
     print(render_board(match, last_event=last_event, clear_screen=clear))
+
     time.sleep(delay if delay > 0 else 0)
 
     while not match.is_finished():
@@ -26,6 +28,7 @@ def run_interactive_match(seed: int = 1, delay: float = 0.08, max_turns: int = 6
         if delay > 0:
             frame = render_board(match, last_event=last_event, clear_screen=clear)
             print(frame)
+            
             time.sleep(delay)
 
     final_frame = render_board(match, last_event=last_event, clear_screen=clear)
@@ -56,8 +59,8 @@ def run_benchmarks():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Arena Bot")
-    parser.add_argument("--seed", type=int, default=1, help="Semente do gerador de mapa (padrão: 1)")
+    parser = argparse.ArgumentParser(description="Arena Bot — Sistema Competitivo de Coleta (PP01)")
+    parser.add_argument("--seed", type=int, default=None, help="Semente do gerador de mapa (aleatória se omitida)")
     parser.add_argument("--delay", type=float, default=0.06, help="Tempo em segundos entre cada turno (padrão: 0.06; use 0 para instantâneo)")
     parser.add_argument("--max-turns", type=int, default=600, help="Limite máximo de turnos da partida (padrão: 600)")
     parser.add_argument("--no-clear", action="store_true", help="Não limpar o terminal entre turnos")
@@ -71,8 +74,9 @@ def main():
     elif args.benchmark:
         run_benchmarks()
     else:
+        chosen_seed = random.randint(1, 999999) if args.seed is None else args.seed
         run_interactive_match(
-            seed=args.seed,
+            seed=chosen_seed,
             delay=args.delay,
             max_turns=args.max_turns,
             clear=not args.no_clear,
