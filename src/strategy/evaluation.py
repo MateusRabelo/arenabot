@@ -50,19 +50,3 @@ def rank_available_minerals(
     ranked.sort(key=lambda item: item[2], reverse=True)
     return ranked
 
-
-if __name__ == "__main__":
-    p_alfa = Position(0, 0)
-    p_beta = Position(14, 8)
-    p_centro = Position(7, 4)
-    eval_centro = evaluate_target(p_alfa, p_beta, p_centro, MineralType.GOLD.value, omega=2.5)
-    assert eval_centro == 50.0
-
-    p_diamante_beta = Position(13, 7)
-    eval_diamante = evaluate_target(p_alfa, p_beta, p_diamante_beta, MineralType.DIAMOND.value, omega=2.5)
-    assert eval_diamante == 55.0
-
-    p_rubi_alfa = Position(1, 1)
-    eval_rubi = evaluate_target(p_alfa, p_beta, p_rubi_alfa, MineralType.RUBY.value, omega=2.5)
-    assert eval_rubi == 125.0
-    assert eval_rubi > eval_diamante

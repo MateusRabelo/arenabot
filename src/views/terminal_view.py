@@ -31,7 +31,7 @@ def battery_bar(val: int, length: int = 10) -> str:
     return f"[{color}{'█' * filled}{DIM}{'░' * empty}{RESET}] {pct:3d}%"
 
 
-def render_board(match, last_event=None, clear_screen: bool = True):
+def render_board(match, last_event=None, clear_screen: bool = True, debug: bool = False):
     if clear_screen and sys.stdout.isatty():
         sys.stdout.write("\033[H\033[J")
 
@@ -41,10 +41,13 @@ def render_board(match, last_event=None, clear_screen: bool = True):
     base_a = Position(*ALFA_BASE[0])
     base_b = Position(*BETA_BASE[1])
 
+    alfa_path_set = set(match.alfa.current_path) if debug else set()
+    beta_path_set = set(match.beta.current_path) if debug else set()
+
     from core.environment import wall, trap
 
     lines = []
-    lines.append(f"{BOLD}ARENA BOT — SISTEMA COMPETITIVO DE COLETA (PP01){RESET}")
+    lines.append(f"{BOLD}ARENA BOT 00000010{RESET}")
     lines.append(f"Turno: {BOLD}{match.turns}{RESET} | Semente: {BOLD}{match.seed}{RESET} | Minérios restantes: {BOLD}{len(env.minerals)}{RESET}")
     lines.append("")
 
@@ -73,6 +76,10 @@ def render_board(match, last_event=None, clear_screen: bool = True):
                 row_str.append(f"{COLOR_BASE_A}{BOLD}⌂A {RESET}")
             elif pos == base_b:
                 row_str.append(f"{COLOR_BASE_B}{BOLD}⌂B {RESET}")
+            elif pos in alfa_path_set:
+                row_str.append(f"{COLOR_ALFA} * {RESET}")
+            elif pos in beta_path_set:
+                row_str.append(f"{COLOR_BETA} * {RESET}")
             else:
                 row_str.append(f"{COLOR_FREE} · {RESET}")
 
@@ -114,5 +121,23 @@ def render_board(match, last_event=None, clear_screen: bool = True):
         if last_event.get("moved"):
             details.append(f"Moveu (-{last_event.get('battery_cost', 0)} bat)")
         lines.append(f"  {BOLD}Último Evento:{RESET} {color}{agent}{RESET}: {' | '.join(details) if details else 'Aguardando'}")
+
+#pra facilitar a visualização
+    if debug:
+        lines.append("")
+        lines.append(f"{BOLD}[DEBUG - NAVEGAÇÃO & ESTRATÉGIA]:{RESET}")
+        lines.append(f"  • Algoritmo de Navegação : {BOLD}A* Heurístico (Distância de Manhattan){RESET}")
+        lines.append(f"  • Algoritmo de Estratégia: {BOLD}Minimax com Poda Alfa-Beta (d=4 plies){RESET}")
+        lines.append(f"  • Validação Lógica       : {BOLD}Motor de Forward Chaining (Base de Regras Horn){RESET}")
+
+        a_path = " -> ".join(f"({p.x},{p.y})" for p in match.alfa.current_path[:6])
+        if len(match.alfa.current_path) > 6:
+            a_path += f" ... (+{len(match.alfa.current_path) - 6} passos)"
+        lines.append(f"  • Caminho Alfa [A*] ({len(match.alfa.current_path)} passos): {a_path or 'Destino atingido / Sem rota'}")
+
+        b_path = " -> ".join(f"({p.x},{p.y})" for p in match.beta.current_path[:6])
+        if len(match.beta.current_path) > 6:
+            b_path += f" ... (+{len(match.beta.current_path) - 6} passos)"
+        lines.append(f"  • Caminho Beta [A*] ({len(match.beta.current_path)} passos): {b_path or 'Destino atingido / Sem rota'}")
 
     return "\n".join(lines)

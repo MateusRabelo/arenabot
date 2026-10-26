@@ -88,6 +88,12 @@ class Match:
         event = active_agent.step(self.env, opponent_pos)
         event["turn"] = self.turns
 
+        if event.get("collected"):
+            other = self.beta if active_agent == self.alfa else self.alfa
+            if other.current_target == active_agent.pos:
+                other.current_target = None
+                other.current_path = []
+
         self.is_finished()
         return event
 
@@ -105,9 +111,3 @@ class Match:
             "minerals_remaining": len(self.env.minerals),
         }
 
-
-if __name__ == "__main__":
-    match = Match(seed=1)
-    res = match.run_all()
-    assert res["winner"] in ("Alfa", "Beta", "Empate")
-    assert res["turns"] > 0

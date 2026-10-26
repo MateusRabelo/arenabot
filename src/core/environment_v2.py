@@ -108,7 +108,6 @@ class EnvironmentV2:
                 placed += 1
 
     def _format_cell(self, raw_char: str, is_path: bool = False, is_target: bool = False, is_start: bool = False) -> str:
-        """Renderiza cada célula com rigorosamente 3 caracteres visuais para manter alinhamento milimétrico."""
         if is_target:
             return f"{COLOR_TARGET}[{raw_char}]{RESET}"
         if is_start:

@@ -28,6 +28,7 @@ class StrategicState:
     beta_cargo: int = 0
     alfa_target_intent: Position | None = None
     alfa_intent_dist: int = 0
+    alfa_intent_val: int = 0
     alfa_base: Position = Position(*ALFA_BASE[0])
     beta_base: Position = Position(*BETA_BASE[1])
 
@@ -60,19 +61,21 @@ class StrategicState:
         if target == base:
             if is_alfa:
                 bonus = self.alfa_cargo * DELIVERY_BONUS_PER_ITEM
-                return replace(self, alfa_pos=base, alfa_score=self.alfa_score + bonus, alfa_cargo=0, alfa_target_intent=None)
+                return replace(self, alfa_pos=base, alfa_score=self.alfa_score + bonus, alfa_cargo=0, alfa_target_intent=None, alfa_intent_val=0)
             else:
                 bonus = self.beta_cargo * DELIVERY_BONUS_PER_ITEM
                 return replace(self, beta_pos=base, beta_score=self.beta_score + bonus, beta_cargo=0)
 
         if is_alfa:
             dist_travel = self.alfa_pos.manhattan_distance(target)
+            m_val = self.available_minerals[target].value if target in self.available_minerals else 0
             new_minerals = {p: v for p, v in self.available_minerals.items() if p != target}
             return replace(
                 self,
                 alfa_pos=target,
                 alfa_target_intent=target,
                 alfa_intent_dist=dist_travel,
+                alfa_intent_val=m_val,
                 available_minerals=new_minerals,
             )
         else:
@@ -80,10 +83,7 @@ class StrategicState:
             new_minerals = {p: v for p, v in self.available_minerals.items() if p != target}
 
             if target == self.alfa_target_intent:
-                m_val = 100 if target == Position(13, 7) else 50
-                if target in self.available_minerals:
-                    m_val = self.available_minerals[target].value
-
+                m_val = self.alfa_intent_val
                 if dist_travel_b < self.alfa_intent_dist:
                     return replace(
                         self,
@@ -91,6 +91,7 @@ class StrategicState:
                         beta_score=self.beta_score + m_val,
                         beta_cargo=self.beta_cargo + 1,
                         alfa_target_intent=None,
+                        alfa_intent_val=0,
                         available_minerals=new_minerals,
                     )
                 else:
@@ -100,15 +101,13 @@ class StrategicState:
                         alfa_score=self.alfa_score + m_val,
                         alfa_cargo=self.alfa_cargo + 1,
                         alfa_target_intent=None,
+                        alfa_intent_val=0,
                         available_minerals=new_minerals,
                     )
 
             m_type_beta = self.available_minerals.get(target)
             pts_beta = m_type_beta.value if m_type_beta else 0
-
-            pts_alfa = 0
-            if self.alfa_target_intent:
-                pts_alfa = 100 if self.alfa_target_intent == Position(13, 7) else 50
+            pts_alfa = self.alfa_intent_val
 
             return replace(
                 self,
@@ -118,6 +117,7 @@ class StrategicState:
                 alfa_score=self.alfa_score + pts_alfa,
                 alfa_cargo=self.alfa_cargo + 1,
                 alfa_target_intent=None,
+                alfa_intent_val=0,
                 available_minerals=new_minerals,
             )
 

@@ -122,7 +122,3 @@ def _demonstrar():
         print(f"  Regras disparadas: {[n for n, _ in rastro] or 'nenhuma'}")
         print(f"  Fatos derivados  : {sorted(derivados) or 'nenhum'}")
         print(f"  Coleta autorizada: {coleta_autorizada(fatos)}\n")
-
-
-if __name__ == "__main__":
-    _demonstrar()
